@@ -1,0 +1,38 @@
+# Get JSON from serialised data
+
+File `player.avro`:
+
+```text
+4F626A0102166176726F2E736368656D61B4027B226E616D65223A224176726F72612E5465737473
+2E506C61796572222C2274797065223A227265636F7264222C226669656C6473223A5B7B226E616D
+65223A224E616D65222C2274797065223A22737472696E67227D2C7B226E616D65223A224C657665
+6C222C2274797065223A22696E74227D2C7B226E616D65223A22457870657269656E6365222C2274
+797065223A22696E74227D5D7D007F43F188026617B7E93D4FDDC3CEFFEE021008416C657806C801
+7F43F188026617B7E93D4FDDC3CEFFEE
+```
+
+Code:
+
+```csharp
+using Avrora;
+using System.IO;
+
+var data = File.ReadAllBytes("player.avro");
+
+var player = AvroSerialiser.Deserialise(data).First();
+
+var options = new AvroSerialiserOptions { Encoding = SerialisationEncoding.Json };
+var encoded = AvroSerialiser.Serialise(player, options);
+
+var json = Encoding.UTF8.GetString(encoded);
+```
+
+Result:
+
+```json
+{
+  "Name": "Alex",
+  "Level": 3,
+  "Experience": 100
+}
+```
